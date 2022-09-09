@@ -1,5 +1,6 @@
-import { React, useEffect } from 'react'
+import { React, useEffect } from 'react';
 import { useState, useCallback } from 'react';
+import nofndimg from '../pages/datanotfound.png';
 import {
   Page,
   Grid,
@@ -15,6 +16,7 @@ import {
   TextContainer,
   Button,
   Heading,
+  ResourceItem,
 } from '@shopify/polaris';
 
 function Home() {
@@ -23,12 +25,11 @@ function Home() {
   const [desableValue, setDesable] = useState(false);
   // input field state
   const [textFieldValue, setTextFieldValue] = useState('');
+  const [notFound, setNotFound] = useState();
 
-  // if (typeof(textFieldValue) == '') {
-  //   alert('this is number')
-  // }
-
-  const handleClearButtonClick = useCallback(() => setTextFieldValue(''), []);
+  const handleClearButtonClick = useCallback(() => {
+    setTextFieldValue('')
+  }, []);
 
   const handleTextFieldChange = useCallback(
     (value) => {
@@ -39,6 +40,7 @@ function Home() {
   const [selected2, setSelected2] = useState('Select');
   const handleSelectChange1 = useCallback((value) => {
     setSelected2('select');
+    setNotFound('');
     setSelected1(value)
   }, []);
   const handleSelectChange2 = useCallback((value) => setSelected2(value), []);
@@ -193,7 +195,7 @@ function Home() {
     const allgitUser = await gitUser.json();
     allgitUser.forEach(user => {
       const usrLogin = user.login.toString();
-      if (usrLogin === textFieldValue) {
+      if (textFieldValue && usrLogin === textFieldValue) {
         tmp.push({
           id: user.id,
           name: user.login,
@@ -201,6 +203,11 @@ function Home() {
           userUrl: user.html_url,
           userType: user.type,
         });
+      }
+      if (tmp.includes(...tmp)) {
+        setNotFound('');
+      } else {
+        setNotFound(<img src={nofndimg} alt="Not Found media" />);
       }
     });
     allGitData.push(allgitUser)
@@ -333,13 +340,13 @@ function Home() {
           );
           allGitData.push(allgitFollowers)
           setRowData(tmp);
+          setNotFound('');
         }
       } else {
         setRowData({});
-
+        setNotFound(<img src={nofndimg} alt="Not Found media" />);
       }
-    }
-    );
+    });
   }
 
   //Shopify Madal Data Handler
@@ -423,21 +430,6 @@ function Home() {
                       <Button size="slim" >View Profile</Button>
                     </Stack.Item>
                   </Stack>
-                  {/* <Stack distribution='fillEvenly' spacing='loose'>
-                    <h3>
-                      <TextStyle username={name} variation="strong">{name}</TextStyle>
-                      <Stack>
-                        <Badge>{userType}</Badge>
-                      </Stack>
-                    </h3>
-
-                    <Tag>{userUrl}</Tag>
-
-                    <Stack>
-                      <TextStyle>{id}</TextStyle>
-                    </Stack>
-                  </Stack> */}
-
                   <div style={{ height: '50px' }}>
                     <Modal
                       activator={Filters}
@@ -476,21 +468,29 @@ function Home() {
                             Github.
                           </p>
                         </TextContainer>
-                        {/* {noResulutFound()} */}
                       </Modal.Section>
                     </Modal>
                   </div>
                 </ResourceList.Item>
-
               );
             }
             }
+          />
+          <ResourceList
+            resourceName={{ singular: 'customer', plural: 'customers' }}
+            items={[{}]}
+            renderItem={(item) => {
+              return (
+                <ResourceItem
+                >
+                  {notFound}
+                </ResourceItem>
+              );
+            }}
           />
         </Card>
       </Page>
     </>
   );
 }
-
-
-export default Home
+export default Home;
