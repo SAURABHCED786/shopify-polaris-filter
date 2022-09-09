@@ -24,19 +24,23 @@ function Home() {
   // input field state
   const [textFieldValue, setTextFieldValue] = useState('');
 
-  // if (typeof (textFieldValue) == 'string') {
-  //   alert('this is string')
+  // if (typeof(textFieldValue) == '') {
+  //   alert('this is number')
   // }
 
   const handleClearButtonClick = useCallback(() => setTextFieldValue(''), []);
 
   const handleTextFieldChange = useCallback(
-    (value) => setTextFieldValue(value), [],
-  );
+    (value) => {
+      setTextFieldValue(value);
+    }, []);
   // Select Option State
   const [selected1, setSelected1] = useState('Select');
   const [selected2, setSelected2] = useState('Select');
-  const handleSelectChange1 = useCallback((value) => setSelected1(value), []);
+  const handleSelectChange1 = useCallback((value) => {
+    setSelected2('select');
+    setSelected1(value)
+  }, []);
   const handleSelectChange2 = useCallback((value) => setSelected2(value), []);
   // Select Options Values Asigns
   const condOpt1 = [
@@ -60,10 +64,7 @@ function Home() {
   const [modalData, setModalData] = useState({});
 
   useEffect(() => {
-    // Username with Contains | DNContains | Equals To | Not Equals To
-    if (typeof (textFieldValue) === 'number') {
-      alert("hello");
-    }
+    // Setrowdata blank if validated with Select
     if (selected1 === 'select' && selected2 === 'select') {
       setDesable(false);
       setRowData({});
@@ -88,6 +89,7 @@ function Home() {
       setDesable(false);
       setRowData({});
     }
+
     if (selected1 === 'id' && selected2 === 'select') {
       setDesable(false);
       setRowData({});
@@ -96,6 +98,7 @@ function Home() {
       setDesable(false);
       setRowData({});
     }
+    // Username with Contains | DNContains | Equals To | Not Equals To
     if (selected1 === 'username' && selected2 === 'contains') {
       usrNameContains();
       setDesable(false);
@@ -107,7 +110,7 @@ function Home() {
     if (selected1 === 'username' && selected2 === 'equalsto') {
       usrNameEqlTo();
       setDesable(false);
-      if(textFieldValue===''){
+      if (textFieldValue === '' && selected1 === 'username' && selected2 === 'equalsto') {
         setRowData({});
       }
     }
@@ -189,7 +192,8 @@ function Home() {
     const gitUser = await fetch('https://api.github.com/users');
     const allgitUser = await gitUser.json();
     allgitUser.forEach(user => {
-      if (user.login === textFieldValue) {
+      const usrLogin = user.login.toString();
+      if (usrLogin === textFieldValue) {
         tmp.push({
           id: user.id,
           name: user.login,
@@ -197,11 +201,10 @@ function Home() {
           userUrl: user.html_url,
           userType: user.type,
         });
-        allGitData.push(allgitUser);
-        setRowData(tmp);
       }
     });
-
+    allGitData.push(allgitUser)
+    setRowData(tmp);
   }
   // Usernam with Notequals to
   async function usrNameNotEqlTo() {
@@ -230,8 +233,8 @@ function Home() {
     const gitUser = await fetch('https://api.github.com/users');
     const allgitUser = await gitUser.json();
     allgitUser.forEach(user => {
-      const usrID = user.id.toString();
-      if (textFieldValue && usrID.startsWith(textFieldValue)) {
+
+      if (textFieldValue && user.id.toString().startsWith(textFieldValue)) {
         tmp.push({
           id: user.id,
           name: user.login,
@@ -313,7 +316,7 @@ function Home() {
     const gitUser = await fetch('https://api.github.com/users');
     const allgitUser = await gitUser.json();
     allgitUser.forEach(user => {
-      if (user.login === textFieldValue && selected1 === 'followers' && selected2 === 'equalsto') {
+      if (textFieldValue === user.login) {
         fetchFollowers();
         async function fetchFollowers() {
           const gitFollowers = await fetch(`https://api.github.com/users/${user.login}/followers`);
@@ -331,6 +334,9 @@ function Home() {
           allGitData.push(allgitFollowers)
           setRowData(tmp);
         }
+      } else {
+        setRowData({});
+
       }
     }
     );
@@ -470,7 +476,7 @@ function Home() {
                             Github.
                           </p>
                         </TextContainer>
-                        {/* {test()} */}
+                        {/* {noResulutFound()} */}
                       </Modal.Section>
                     </Modal>
                   </div>
