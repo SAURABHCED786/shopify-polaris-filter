@@ -164,6 +164,11 @@ function Home() {
           userType: user.type,
         });
       }
+      if (tmp.includes(...tmp)) {
+        setNotFound('');
+      } else {
+        setNotFound(<img src={nofndimg} alt="Not Found media" />);
+      }
     });
     allGitData.push(allgitUser)
     setRowData(tmp);
@@ -183,7 +188,11 @@ function Home() {
           userType: user.type,
         });
       }
-
+      if (tmp.includes(...tmp)) {
+        setNotFound('');
+      } else {
+        setNotFound(<img src={nofndimg} alt="Not Found media" />);
+      }
     });
     allGitData.push(allgitUser)
     setRowData(tmp);
@@ -228,6 +237,11 @@ function Home() {
           userType: user.type,
         });
       }
+      if (tmp.includes(...tmp)) {
+        setNotFound('');
+      } else {
+        setNotFound(<img src={nofndimg} alt="Not Found media" />);
+      }
     });
     allGitData.push(allgitUser)
     setRowData(tmp);
@@ -240,7 +254,6 @@ function Home() {
     const gitUser = await fetch('https://api.github.com/users');
     const allgitUser = await gitUser.json();
     allgitUser.forEach(user => {
-
       if (textFieldValue && user.id.toString().startsWith(textFieldValue)) {
         tmp.push({
           id: user.id,
@@ -249,6 +262,11 @@ function Home() {
           userUrl: user.html_url,
           userType: user.type,
         });
+      }
+      if (tmp.includes(...tmp)) {
+        setNotFound('');
+      } else {
+        setNotFound(<img src={nofndimg} alt="Not Found media" />);
       }
     });
     allGitData.push(allgitUser)
@@ -270,7 +288,11 @@ function Home() {
           userType: user.type,
         });
       }
-
+      if (tmp.includes(...tmp)) {
+        setNotFound('');
+      } else {
+        setNotFound(<img src={nofndimg} alt="Not Found media" />);
+      }
     });
     allGitData.push(allgitUser)
     setRowData(tmp);
@@ -291,7 +313,11 @@ function Home() {
           userType: user.type,
         });
       }
-
+      if (tmp.includes(...tmp)) {
+        setNotFound('');
+      } else {
+        setNotFound(<img src={nofndimg} alt="Not Found media" />);
+      }
     });
     allGitData.push(allgitUser)
     setRowData(tmp);
@@ -311,6 +337,11 @@ function Home() {
           userUrl: user.html_url,
           userType: user.type,
         });
+      }
+      if (tmp.includes(...tmp)) {
+        setNotFound('');
+      } else {
+        setNotFound(<img src={nofndimg} alt="Not Found media" />);
       }
     });
     allGitData.push(allgitUser)
