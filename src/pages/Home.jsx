@@ -20,9 +20,14 @@ import {
 function Home() {
   // Modal data state
   const [active, setActive] = useState(false);
-
+  const [desableValue, setDesable] = useState(false);
   // input field state
   const [textFieldValue, setTextFieldValue] = useState('');
+
+  // if (typeof (textFieldValue) == 'string') {
+  //   alert('this is string')
+  // }
+
   const handleClearButtonClick = useCallback(() => setTextFieldValue(''), []);
 
   const handleTextFieldChange = useCallback(
@@ -56,41 +61,88 @@ function Home() {
 
   useEffect(() => {
     // Username with Contains | DNContains | Equals To | Not Equals To
+    if (typeof (textFieldValue) === 'number') {
+      alert("hello");
+    }
+    if (selected1 === 'select' && selected2 === 'select') {
+      setDesable(false);
+      setRowData({});
+    }
+    if (selected1 === 'select' && selected2 === 'contains') {
+      setDesable(false);
+      setRowData({});
+    }
+    if (selected1 === 'select' && selected2 === 'doesnotcontains') {
+      setDesable(false);
+      setRowData({});
+    }
+    if (selected1 === 'select' && selected2 === 'equalsto') {
+      setDesable(false);
+      setRowData({});
+    }
+    if (selected1 === 'select' && selected2 === 'notequalsto') {
+      setDesable(false);
+      setRowData({});
+    }
+    if (selected1 === 'username' && selected2 === 'select') {
+      setDesable(false);
+      setRowData({});
+    }
+    if (selected1 === 'id' && selected2 === 'select') {
+      setDesable(false);
+      setRowData({});
+    }
+    if (textFieldValue === '' && selected1 === 'followers' && selected2 === 'equalsto') {
+      setDesable(false);
+      setRowData({});
+    }
     if (selected1 === 'username' && selected2 === 'contains') {
       usrNameContains();
+      setDesable(false);
     }
     if (selected1 === 'username' && selected2 === 'doesnotcontains') {
       usrNameDNCon();
+      setDesable(false);
     }
     if (selected1 === 'username' && selected2 === 'equalsto') {
       usrNameEqlTo();
+      setDesable(false);
+      if(textFieldValue===''){
+        setRowData({});
+      }
     }
     if (selected1 === 'username' && selected2 === 'notequalsto') {
       usrNameNotEqlTo();
+      setDesable(false);
     }
 
     // Id with Contains | DNContains | Equals To | Not Equals To
     if (selected1 === 'id' && selected2 === 'contains') {
       idContains();
+      setDesable(false);
     }
     if (selected1 === 'id' && selected2 === 'doesnotcontains') {
       idDNCon();
+      setDesable(false);
     }
     if (selected1 === 'id' && selected2 === 'equalsto') {
       idEqlTo();
+      setDesable(false);
     }
     if (selected1 === 'id' && selected2 === 'notequalsto') {
       idNotEqlTo();
+      setDesable(false);
     }
 
     // Followers with only Equals To 
     if (selected1 === 'followers') {
       setSelected2('equalsto');
+      setDesable(true);
       if (selected1 === 'followers' && selected2 === 'equalsto') {
         followerEqlTo();
       }
     }
-  }, [textFieldValue, selected1, selected2]);
+  }, [textFieldValue, selected1, selected2,]);
 
   // Username With Contains Data 
   async function usrNameContains() {
@@ -145,11 +197,11 @@ function Home() {
           userUrl: user.html_url,
           userType: user.type,
         });
+        allGitData.push(allgitUser);
+        setRowData(tmp);
       }
-
     });
-    allGitData.push(allgitUser)
-    setRowData(tmp);
+
   }
   // Usernam with Notequals to
   async function usrNameNotEqlTo() {
@@ -174,7 +226,6 @@ function Home() {
 
   // Id With Contains Data 
   async function idContains() {
-
     const tmp = [];
     const gitUser = await fetch('https://api.github.com/users');
     const allgitUser = await gitUser.json();
@@ -262,7 +313,7 @@ function Home() {
     const gitUser = await fetch('https://api.github.com/users');
     const allgitUser = await gitUser.json();
     allgitUser.forEach(user => {
-      if (user.login === textFieldValue) {
+      if (user.login === textFieldValue && selected1 === 'followers' && selected2 === 'equalsto') {
         fetchFollowers();
         async function fetchFollowers() {
           const gitFollowers = await fetch(`https://api.github.com/users/${user.login}/followers`);
@@ -275,12 +326,14 @@ function Home() {
               userUrl: followers.html_url,
               userType: followers.type,
             });
-          });
+          }
+          );
           allGitData.push(allgitFollowers)
           setRowData(tmp);
         }
       }
-    });
+    }
+    );
   }
 
   //Shopify Madal Data Handler
@@ -289,7 +342,6 @@ function Home() {
     let temp = {
       id, name, userPic, userUrl, userType
     }
-    console.log("temp", temp.id);
     setModalData(temp);
     setActive(!active)
   }
@@ -329,6 +381,7 @@ function Home() {
                 options={condOpt2}
                 onChange={handleSelectChange2}
                 value={selected2}
+                disabled={desableValue}
               />
             </Grid.Cell>
           </Grid>
